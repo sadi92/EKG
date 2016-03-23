@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FirebirdSql.Data.FirebirdClient;
 
 namespace EKG
 {
@@ -16,6 +17,8 @@ namespace EKG
         {
             InitializeComponent();
             SetFontAndColors();
+            polacz Polacz = new polacz();
+            FbDataAdapter adapter = Polacz.fire_polacz();
         }
 
         private void tabPage1_Click(object sender, EventArgs e)

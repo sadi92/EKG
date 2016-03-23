@@ -50,7 +50,7 @@ namespace EKG
             return dataSet;
         }
 
-        public void JakasFunkcja()
+        public FbDataAdapter fire_polacz()
         {
             string cselx = "User=SYSDBA;" +
                            "Password=masterkey;" +
@@ -58,7 +58,25 @@ namespace EKG
                            "DataSource=localhost;" +
                            "Port=3050;Dialect=3;Charset=NONE;Role=;Connection lifetime=15;Pooling=true;MinPoolSize=0;MaxPoolSize=50;Packet Size=8192;ServerType=0";
 
-            
+            FbConnection fb_conn = new FbConnection(cselx);
+
+            DataTable dt = null;
+            fb_conn.Open();
+
+            FbCommand fb_comm = new FbCommand();
+            FbTransaction fb_trans = fb_conn.BeginTransaction();
+            fb_comm.Connection = fb_conn;
+            fb_comm.Transaction = fb_trans;
+
+            fb_comm.CommandText = "SELECT * FROM table_name";
+
+            FbDataAdapter adapter = new FbDataAdapter(fb_comm);
+            dt = new DataTable();
+            adapter.Fill(dt);
+
+            fb_conn.Close();
+
+            return adapter;
         }
     }
 
