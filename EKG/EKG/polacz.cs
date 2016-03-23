@@ -2,6 +2,7 @@
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
+using FirebirdSql.Data.FirebirdClient;
 
 namespace EKG
 {
@@ -9,11 +10,11 @@ namespace EKG
     class polacz
     {
         DataSet dataSet = new DataSet();
-     
+
         public polacz()
         {
             //Initialize();
-        }   
+        }
         public DataSet mysql_polacz(string baza, string adres, string user, string password, string myQuery)
         {
             DialogResult dr = DialogResult.Retry;
@@ -23,7 +24,7 @@ namespace EKG
                 try
                 {
                     string mysql_string = "Server=" + adres + ";Database=" + baza + ";Uid=" + user + ";Pwd=" + password;
-                    
+
                     MySqlConnection mysql_polaczenie = new MySqlConnection(mysql_string);
 
                     MySqlDataAdapter mySqlAdapter = new MySqlDataAdapter(myQuery, mysql_string);
@@ -33,7 +34,7 @@ namespace EKG
                     mysql_polaczenie.Close();
 
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MessageBox.Show(e.ToString());
                     dr = MessageBox.Show("Nie można nawiązać połączenia z bazą danych. Sprawdż połączenie. \nKliknij Ponów Próbę, aby spróbować ponownie, albo Anuluj, aby zamknąć aplikację.", "Błąd!", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
@@ -42,11 +43,24 @@ namespace EKG
                         //po wciśnięciu "anuluj" zamknięcie aplikacji
                         Form1.ActiveForm.Close();
                     }
-                    
+
                 }
-                
+
             }
             return dataSet;
         }
+
+        public void JakasFunkcja()
+        {
+            string cselx = "User=SYSDBA;" +
+                           "Password=masterkey;" +
+                           "Database=baza;" +
+                           "DataSource=localhost;" +
+                           "Port=3050;Dialect=3;Charset=NONE;Role=;Connection lifetime=15;Pooling=true;MinPoolSize=0;MaxPoolSize=50;Packet Size=8192;ServerType=0";
+
+            
+        }
     }
+
+
 }
