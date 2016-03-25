@@ -8,18 +8,47 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FirebirdSql.Data.FirebirdClient;
-
+using Ozeki.Media;
+using Ozeki.Camera;
+using Vlc.DotNet.Forms;
+using Vlc.DotNet.Core;
 namespace EKG
 {
     public partial class Form1 : Form
     {
         //Zmienne
-
+        VlcControl player = null;
         public Form1()
         {
             InitializeComponent();
             SetFontAndColors();
             fire_polacz();
+
+            //vlc - plugin
+            axVLCPlugin21.playlist.add("rtsp://admin:12345@192.168.1.65:554//Streaming/Channels/1");
+            axVLCPlugin21.playlist.play();
+            axVLCPlugin21.Toolbar = false;
+
+            //vlc2 - plugin
+            axVLCPlugin22.playlist.add("rtsp://admin:12345@192.168.1.65:554//Streaming/Channels/1");
+            axVLCPlugin22.playlist.play();
+            axVLCPlugin22.Toolbar = false;
+        }
+
+
+        private void start_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void stop_Click(object sender, EventArgs e)
+        {
+            axVLCPlugin21.playlist.stop();
+        }
+
+        private void pause_Click(object sender, EventArgs e)
+        {
+            axVLCPlugin21.playlist.togglePause();
         }
 
         private void tabPage1_Click(object sender, EventArgs e)
@@ -70,7 +99,7 @@ namespace EKG
             fb_comm.Connection = fb_conn;
             fb_comm.Transaction = fb_trans;
 
-            fb_comm.CommandText = "SELECT * FROM pracownicy";
+            fb_comm.CommandText = "SELECT id,nazwisko,imie,godz_wej,godz_wyj FROM pracownicy";
 
             FbDataAdapter adapter = new FbDataAdapter(fb_comm);
             dt = new DataTable();
@@ -98,6 +127,16 @@ namespace EKG
             dataGridView1.Columns[1].Width = 250;
             dataGridView1.Columns[2].Width = 250;
 
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void axVLCPlugin21_Enter(object sender, EventArgs e)
+        {
 
         }
     }
