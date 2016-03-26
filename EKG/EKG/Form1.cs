@@ -22,7 +22,7 @@ namespace EKG
         {
             InitializeComponent();
             SetFontAndColors();
-            fire_polacz();
+            laduj_tabele();
 
             //vlc - plugin
             axVLCPlugin21.playlist.add("rtsp://admin:12345@192.168.1.65:554//Streaming/Channels/1");
@@ -79,33 +79,12 @@ namespace EKG
             //this.dataGridView1.DefaultCellStyle.SelectionBackColor = Color.Black; - kolor zaznaczenia
         }
 
-        private void fire_polacz()
+        private void laduj_tabele()
         {
-
-            //obsługa połączenia z bazą danych
-            string cselx = "User=SYSDBA;" +
-                           "Password=masterkey;" +
-                           "Database=baza;" +
-                           "DataSource=localhost;" +
-                           "Port=3050;Dialect=3;Charset=NONE;Role=;Connection lifetime=15;Pooling=true;MinPoolSize=0;MaxPoolSize=50;Packet Size=8192;ServerType=0";
-
-            FbConnection fb_conn = new FbConnection(cselx);
-
+            //połączenie z bazą danych
             DataTable dt = null;
-            fb_conn.Open();
-
-            FbCommand fb_comm = new FbCommand();
-            FbTransaction fb_trans = fb_conn.BeginTransaction();
-            fb_comm.Connection = fb_conn;
-            fb_comm.Transaction = fb_trans;
-
-            fb_comm.CommandText = "SELECT id,nazwisko,imie,godz_wej,godz_wyj FROM pracownicy";
-
-            FbDataAdapter adapter = new FbDataAdapter(fb_comm);
-            dt = new DataTable();
-            adapter.Fill(dt);
-
-            fb_conn.Close();
+            polacz baza_danych = new polacz();
+            dt = baza_danych.fire_polacz("SELECT id,nazwisko,imie,godz_wej,godz_wyj FROM pracownicy");
             dataGridView1.DataSource = dt;
 
             //modyfikacja wyglądu DataGridview
@@ -116,18 +95,16 @@ namespace EKG
             //this.dataGridView1.DefaultCellStyle.SelectionBackColor = Color.Black; - kolor zaznaczenia
 
             //Nazwa kolumny
-            dataGridView1.Columns[0].HeaderText = "ID";
-            dataGridView1.Columns[1].HeaderText = "Nazwisko";
-            dataGridView1.Columns[2].HeaderText = "Imię";
-            dataGridView1.Columns[3].HeaderText = "Godzina wejścia";
-            dataGridView1.Columns[4].HeaderText = "Godzina wyjścia";
+            dataGridView1.Columns [0].HeaderText = "ID";
+            dataGridView1.Columns [1].HeaderText = "Nazwisko";
+            dataGridView1.Columns [2].HeaderText = "Imię";
+            dataGridView1.Columns [3].HeaderText = "Godzina wejścia";
+            dataGridView1.Columns [4].HeaderText = "Godzina wyjścia";
 
             //Szerokość kolumny
-            dataGridView1.Columns[0].Width = 50;
-            dataGridView1.Columns[1].Width = 250;
-            dataGridView1.Columns[2].Width = 250;
-
-
+            dataGridView1.Columns [0].Width = 50;
+            dataGridView1.Columns [1].Width = 250;
+            dataGridView1.Columns [2].Width = 250;
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -139,5 +116,13 @@ namespace EKG
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form nowyRekord = new dodajRekord();
+            nowyRekord.Show();
+        }
+
+
     }
 }
