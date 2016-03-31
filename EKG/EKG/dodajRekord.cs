@@ -12,35 +12,33 @@ namespace EKG
 {
     public partial class dodajRekord : Form
     {
-        public dodajRekord()
+        polacz baza_danych = new polacz();
+        private Form1 f1;
+        public dodajRekord(Form1 f)
         {
+            f1 = f;
             InitializeComponent();
             numericUpDown1.Value = DateTime.Now.Hour;
             numericUpDown2.Value = DateTime.Now.Minute;
             this.ActiveControl = textBox1;
             button4.Enabled = false;
+            
 
         }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void wypelnij()
         {
 
             //MessageBox.Show("Dup Dup Dup DUPA!");
-            polacz baza_danych = new polacz();
-            DataTable dt = null;
+
+            DataSet dt = null;
             dt = baza_danych.fire_polacz("SELECT nazwisko, imie FROM baza_pracownicy WHERE id=" + textBox1.Text);
-            if (dt.Rows.Count == 0)
+            if (dt.Tables[0].Rows.Count == 0)
             {
                 MessageBox.Show("Nie znaleziono pracownika o takim numerze!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBox1.Text = "";
@@ -49,8 +47,8 @@ namespace EKG
             }
             else
             {
-                textBox2.Text = dt.Rows[0]["imie"].ToString();
-                textBox3.Text = dt.Rows[0]["nazwisko"].ToString();
+                textBox2.Text = dt.Tables[0].Rows[0]["imie"].ToString();
+                textBox3.Text = dt.Tables[0].Rows[0]["nazwisko"].ToString();
                 textBox2.Enabled = false;
                 textBox3.Enabled = false;
                 textBox1.Enabled = false;
@@ -64,7 +62,8 @@ namespace EKG
                 base.OnKeyPress(e);
                 if(e.KeyChar ==13)
                 {
-                    wypelnij();
+                    e.Handled = true;
+                    wypelnij();           
                 }
                 
             }
@@ -105,9 +104,8 @@ namespace EKG
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e) //dodaj wejście
         {
-            Form1 form1 = new Form1();
             DateTime czas_wej = new DateTime();
             czas_wej.AddHours(Convert.ToDouble(numericUpDown1.Value));
             czas_wej.AddMinutes(Convert.ToDouble(numericUpDown2.Value));
@@ -115,12 +113,10 @@ namespace EKG
             czas_wej.AddMonths(dateTimePicker1.Value.Month);
             czas_wej.AddDays(dateTimePicker1.Value.Day);
 
-            int RowIndex = form1.dataGridView1.Rows.Add();
-            form1.dt.Rows[RowIndex].Cells[0].Value = 1;
-            form1.dataGridView1.Rows[RowIndex].Cells[1].Value = textBox2.Text;
-            form1.dataGridView1.Rows[RowIndex].Cells[2].Value = textBox3.Text;
-            form1.dataGridView1.Rows[RowIndex].Cells[3].Value = czas_wej;
-
+            f1._imie = textBox2.Text;
+            f1._nazwisko = textBox3.Text;
+            f1._czas_wej = czas_wej;
+            Close();
         }
     }
 }

@@ -8,20 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FirebirdSql.Data.FirebirdClient;
-using Ozeki.Media;
-using Ozeki.Camera;
-using Vlc.DotNet.Forms;
-using Vlc.DotNet.Core;
 namespace EKG
 {
     public partial class Form1 : Form
     {
         //Zmienne
-        VlcControl player = null;
+        public DataSet dt;
+        public string _imie, _nazwisko;
+        public DateTime _czas_wej;
         public Form1()
         {
             InitializeComponent();
-            SetFontAndColors();
             laduj_tabele();
 
             //vlc - plugin
@@ -58,11 +55,7 @@ namespace EKG
 
         private void button2_Click(object sender, EventArgs e)
         {
-            /*polacz Polacz = new polacz();
-            DataSet get = Polacz.mysql_polacz("toya","192.168.100.59","root","ksy.123!","select * from pracownicy");
-            dataGridView1.AutoGenerateColumns = true;
-            dataGridView1.DataSource = get;
-            dataGridView1.DataMember = "pracownicy";*/
+
         }
 
         private void tabPage3_Click(object sender, EventArgs e)
@@ -70,29 +63,13 @@ namespace EKG
 
         }
 
-        private void SetFontAndColors() //zmiana wyglądu datagridview
-        {
-            //this.dataGridView1.DefaultCellStyle.Font = new Font("Calibri", 15);
-            //this.dataGridView1.DefaultCellStyle.ForeColor = Color.Blue;
-            //this.dataGridView1.DefaultCellStyle.BackColor = Color.Beige;
-           // this.dataGridView1.DefaultCellStyle.SelectionForeColor = Color.Yellow;
-            //this.dataGridView1.DefaultCellStyle.SelectionBackColor = Color.Black; - kolor zaznaczenia
-        }
-
         private void laduj_tabele()
         {
             //połączenie z bazą danych
-            DataTable dt = null;
+            //DataSet dt = null;
             polacz baza_danych = new polacz();
             dt = baza_danych.fire_polacz("SELECT id,nazwisko,imie,godz_wej,godz_wyj FROM pracownicy");
-            dataGridView1.DataSource = dt;
-
-            //modyfikacja wyglądu DataGridview
-            //this.dataGridView1.DefaultCellStyle.Font = new Font("Calibri", 15);
-            //this.dataGridView1.DefaultCellStyle.ForeColor = Color.Blue;
-            //this.dataGridView1.DefaultCellStyle.BackColor = Color.Beige;
-            // this.dataGridView1.DefaultCellStyle.SelectionForeColor = Color.Yellow;
-            //this.dataGridView1.DefaultCellStyle.SelectionBackColor = Color.Black; - kolor zaznaczenia
+            dataGridView1.DataSource = dt.Tables[0];
 
             //Nazwa kolumny
             dataGridView1.Columns [0].HeaderText = "ID";
@@ -119,10 +96,25 @@ namespace EKG
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Form nowyRekord = new dodajRekord();
+            Form nowyRekord = new dodajRekord(this);
+            nowyRekord.FormClosed += new FormClosedEventHandler(nowyRekord_Closed);
             nowyRekord.Show();
         }
 
-
+         void nowyRekord_Closed(object sender, FormClosedEventArgs e)
+         {
+            //dodanie wiersza do datagridview
+            //int rowindex = dt.Tables[0].Rows.Count;
+            DataRow row;
+            int rowindex = dt.Tables[0].Rows.Count;
+            row = dt.Tables[0].NewRow();
+            row[0] = rowindex-1;
+            row[1] = _imie;
+            row[2] = _nazwisko;
+            row[3] = _czas_wej;
+            dt.Tables[0].Rows.Add(row); 
+            
+         }
+        
     }
 }
