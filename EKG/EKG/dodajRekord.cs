@@ -106,16 +106,13 @@ namespace EKG
 
         private void button4_Click(object sender, EventArgs e) //dodaj wejście
         {
-            DateTime czas_wej = new DateTime();
-            czas_wej.AddHours(Convert.ToDouble(numericUpDown1.Value));
-            czas_wej.AddMinutes(Convert.ToDouble(numericUpDown2.Value));
-            czas_wej.AddYears(dateTimePicker1.Value.Hour);
-            czas_wej.AddMonths(dateTimePicker1.Value.Month);
-            czas_wej.AddDays(dateTimePicker1.Value.Day);
-
+            string data = dateTimePicker1.Value.ToShortDateString();
+            f1._data_wej = data;
+            string czas = numericUpDown1.Value + ":" + numericUpDown2.Value;
+            f1._czas_wej = czas;
             f1._imie = textBox2.Text;
             f1._nazwisko = textBox3.Text;
-            f1._czas_wej = czas_wej;
+            //f1._czas_wej = czas_wej;
             Close();
         }
     }
