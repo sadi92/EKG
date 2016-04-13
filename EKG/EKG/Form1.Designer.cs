@@ -163,6 +163,7 @@
             this.button2.Image = global::EKG.Properties.Resources.rsz_wejscie;
             this.button2.Name = "button2";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
             // button5
             // 

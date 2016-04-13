@@ -61,21 +61,23 @@ namespace EKG
 
         public void insert(DataSet tabela)
         {
-            FbConnection fb_conn = new FbConnection(cselx);
+            /* FbConnection fb_conn = new FbConnection(cselx);
 
-            fb_conn.Open();
+             fb_conn.Open();
 
-            FbCommand fb_comm = new FbCommand();
-            FbTransaction fb_trans = fb_conn.BeginTransaction();
-            fb_comm.Connection = fb_conn;
-            fb_comm.Transaction = fb_trans;
-            fb_comm.CommandText = "SELECT * FROM PRACOWNICY";
+             FbCommand fb_comm = new FbCommand();
+             FbTransaction fb_trans = fb_conn.BeginTransaction();
+             fb_comm.Connection = fb_conn;
+             fb_comm.Transaction = fb_trans;
+             //fb_comm.CommandText = "SELECT * FROM PRACOWNICY";
 
-            FbDataAdapter adapter = new FbDataAdapter(fb_comm);
+             FbDataAdapter adapter = new FbDataAdapter(fb_comm);*/
 
-            FbCommandBuilder builder = new FbCommandBuilder(adapter);
-            adapter.InsertCommand = builder.GetInsertCommand();
-            adapter.Update(tabela,"pracownicy");
+            FbConnection fbCon = new FbConnection(cselx);
+            FbDataAdapter fbDAdapter = new FbDataAdapter("SELECT id,imie,nazwisko,data_wej,godz_wej,id_pracownik FROM pracownicy", fbCon);
+            FbCommandBuilder Cmd = new FbCommandBuilder(fbDAdapter);
+            fbDAdapter.Update(tabela,"pracownicy");
+            
         }
     }
     

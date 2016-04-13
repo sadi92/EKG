@@ -1,6 +1,6 @@
 ﻿namespace EKG
 {
-    partial class dodajRekord
+    partial class dodajWejscie
     {
         /// <summary>
         /// Required designer variable.
