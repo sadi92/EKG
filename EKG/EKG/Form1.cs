@@ -15,7 +15,7 @@ namespace EKG
         //Zmienne
 
         public DataSet dt = new DataSet();
-        public string _imie = null, _nazwisko, _czas_wej, _data_wej;
+        public string _imie = null, _nazwisko, _czas_wej, _data_wej, _data_wyj, _czas_wyj;
         public string _karta;
         //public DateTime _czas_wej;
         public Form1()
@@ -90,6 +90,7 @@ namespace EKG
 
             //Ukryte kolumny
             dataGridView1.Columns[7].Visible = false;
+            dataGridView1.Columns[0].Visible = false;
 
             //Szerokość kolumny
             dataGridView1.Columns [0].Width = 50;
@@ -99,6 +100,7 @@ namespace EKG
             dataGridView1.Columns[4].Width = 130;
             dataGridView1.Columns[5].Width = 130;
             dataGridView1.Columns[6].Width = 130;
+
 
         }
 
@@ -114,8 +116,25 @@ namespace EKG
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-            Form DodajWyjscie = new dodajWyjscie();
-            DodajWyjscie.Show();
+            Form Dodajwyjscie = new dodajWyjscie(this);
+            Dodajwyjscie.FormClosed += new FormClosedEventHandler(dodajWyjscie_Closed);
+            Dodajwyjscie.Show();
+        }
+
+        private void dataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e) //numerowanie wierszy w datagridview
+        {
+            var grid = sender as DataGridView;
+            var rowIdx = (e.RowIndex + 1).ToString();
+
+            var centerFormat = new StringFormat()
+            {
+                // right alignment might actually make more sense for numbers
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            var headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, grid.RowHeadersWidth, e.RowBounds.Height);
+            e.Graphics.DrawString(rowIdx, this.Font, SystemBrushes.ControlText, headerBounds, centerFormat);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -123,6 +142,29 @@ namespace EKG
             Form nowyRekord = new dodajWejscie(this);
             nowyRekord.FormClosed += new FormClosedEventHandler(nowyRekord_Closed);
             nowyRekord.Show();
+        }
+
+        void dodajWyjscie_Closed(object sender, FormClosedEventArgs e)
+        {
+            
+            if(_karta !=null)
+            {
+                
+                DataRow dr = dt.Tables[0].Select("id_pracownik = " + _karta).FirstOrDefault();
+                if(dr != null)
+                {
+                    if(dr[5].ToString() == "" && dr[6].ToString() == "")
+                    { 
+                        dr[5] = _data_wyj;
+                        dr[6] = _czas_wyj;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Wybrany pracownik opuścił już obiekt!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                insert();             
+            }
         }
 
          void nowyRekord_Closed(object sender, FormClosedEventArgs e)
@@ -141,14 +183,20 @@ namespace EKG
                 row[4] = _czas_wej;
                 row[7] = _karta;
                 dt.Tables[0].Rows.Add(row);
-                update();
+                insert();
             }
            
          }
-        void update()
+        void insert()
         {
             polacz baza_danych = new polacz();
             baza_danych.insert(dt);
+        }
+
+        void update()
+        {
+            //polacz baza_danych = new polacz();
+           // b//aza_danych.update(dataGridView1);
         }
         
     }

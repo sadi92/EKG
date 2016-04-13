@@ -42,7 +42,7 @@ namespace EKG
         }
 
 
-        public void update(DataSet tabela) //TODO: aktualizacja bazy
+        public void update() //TODO: aktualizacja bazy
         {
             FbConnection fb_conn = new FbConnection(cselx);
 
@@ -56,25 +56,13 @@ namespace EKG
             //fb_comm.CommandText = zapytanie;
 
             FbDataAdapter adapter = new FbDataAdapter(fb_comm);
-            adapter.Update(tabela); // tu ewentualnie zamiast "pracownicy" wstawić zmienną by można było aktualizować inne tabele
+          //  adapter.Update(); // tu ewentualnie zamiast "pracownicy" wstawić zmienną by można było aktualizować inne tabele
         }
 
         public void insert(DataSet tabela)
         {
-            /* FbConnection fb_conn = new FbConnection(cselx);
-
-             fb_conn.Open();
-
-             FbCommand fb_comm = new FbCommand();
-             FbTransaction fb_trans = fb_conn.BeginTransaction();
-             fb_comm.Connection = fb_conn;
-             fb_comm.Transaction = fb_trans;
-             //fb_comm.CommandText = "SELECT * FROM PRACOWNICY";
-
-             FbDataAdapter adapter = new FbDataAdapter(fb_comm);*/
-
             FbConnection fbCon = new FbConnection(cselx);
-            FbDataAdapter fbDAdapter = new FbDataAdapter("SELECT id,imie,nazwisko,data_wej,godz_wej,id_pracownik FROM pracownicy", fbCon);
+            FbDataAdapter fbDAdapter = new FbDataAdapter("SELECT * FROM pracownicy", fbCon);
             FbCommandBuilder Cmd = new FbCommandBuilder(fbDAdapter);
             fbDAdapter.Update(tabela,"pracownicy");
             

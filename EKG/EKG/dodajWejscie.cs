@@ -113,7 +113,7 @@ namespace EKG
             //DataRow znalezioneWiersze = null;
 
             if (f1.dt.Tables[0].Select("id_pracownik = " +textBox1.Text).Count() == 0)
-            { 
+            {
                 string data = dateTimePicker1.Value.ToShortDateString();
                 f1._data_wej = data;
                 string czas = numericUpDown1.Value + ":" + numericUpDown2.Value;
